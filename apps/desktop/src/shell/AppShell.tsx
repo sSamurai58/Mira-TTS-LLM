@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { ScreenId } from "../App";
+import { UpdateBanner } from "../components/UpdateBanner";
 
 const STEPS: { id: ScreenId; label: string }[] = [
   { id: "studio", label: "Студия" },
@@ -95,6 +96,7 @@ export function AppShell({
               minHeight: "100%",
             }}
           >
+            <UpdateBanner />
             {children}
           </div>
         </main>

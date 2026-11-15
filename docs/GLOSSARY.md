@@ -11,6 +11,11 @@
 
 ## Поверхность
 - DesktopShell — локальное окно приложения v1 (шапка + шаг-навигатор + сцена)
+- UpdateBanner — полоса статуса обновления (проверка / загрузка / перезапуск)
+
+## Обновления
+- AppRelease — релиз на GitHub Releases (tag mira-v*)
+- UpdateStatus — idle | checking | available | downloading | ready | upToDate | error
 
 ## Сущности
 - VoiceSample — исходный аудиосемпл голоса

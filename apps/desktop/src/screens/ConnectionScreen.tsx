@@ -14,6 +14,8 @@ export function ConnectionScreen({
   const [token, setToken] = useState<string | null>(null);
   const [port, setPort] = useState(8741);
   const [error, setError] = useState<string | null>(null);
+  const [appVersion, setAppVersion] = useState<string>("");
+  const hasUpdater = typeof window !== "undefined" && Boolean(window.miraUpdater);
 
   async function refresh() {
     const [s, m] = await Promise.all([api.getApiSettings(), api.listModels()]);
@@ -26,6 +28,7 @@ export function ConnectionScreen({
     refresh().catch((e) =>
       setError(e instanceof MiraApiError ? e.message : "Ошибка настроек API."),
     );
+    void window.miraUpdater?.getVersion().then(setAppVersion);
   }, []);
 
   async function rotate() {
@@ -68,6 +71,33 @@ export function ConnectionScreen({
     <div className="stack" style={{ maxWidth: 640 }}>
       <h1 className="title-screen">Подключение</h1>
       {error ? <div className="banner error">{error}</div> : null}
+      <section className="stack" style={{ gap: 12 }}>
+        <h2 className="title-block">Обновления</h2>
+        <p className="meta" style={{ margin: 0 }}>
+          Проверка GitHub Releases, фоновое скачивание, перезапуск.
+          {appVersion ? (
+            <>
+              {" "}
+              Версия: <span className="mono">{appVersion}</span>
+            </>
+          ) : null}
+        </p>
+        <div className="row">
+          <Button
+            variant="secondary"
+            disabled={!hasUpdater}
+            onClick={() => void window.miraUpdater?.check()}
+          >
+            Проверить обновления
+          </Button>
+        </div>
+        {!hasUpdater ? (
+          <p className="muted" style={{ margin: 0 }}>
+            Автообновление доступно в установленном приложении (релиз). В браузерном dev-режиме
+            кнопки нет.
+          </p>
+        ) : null}
+      </section>
       <div className="row">
         <StatusPill tone={settings?.running ? "success" : "mute"}>
           {settings?.running ? "API включён" : "API выключен"}

@@ -4,7 +4,8 @@
 - Stub ML — качество не продакшен — заменить воркеры — бэкенд
 - SNR/клиппинг не измерены — domain — позже
 - Запись микрофона / sampleRate браузера — SampleRateUnsupported — фронтенд
-- Нет автосборки подписанного .dmg/.exe — ручной pack — DevOps
+- Release workflow v1 публикует Linux AppImage; mac/win — позже или вручную — DevOps
+- Автообновление только в packaged build; vite-dev не качает релиз — ожидаемо — фронтенд
 - Откат кода не откатывает `~/.mira` данные — бэкап data dir перед major — DevOps/пользователь
 - Удаление mira.db необратимо для локальных метаданных — предупредить в RELEASE — DevOps
 

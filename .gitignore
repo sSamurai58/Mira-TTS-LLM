@@ -12,5 +12,6 @@ venv/
 .DS_Store
 node_modules/
 apps/desktop/dist/
+apps/desktop/release/
 *.tsbuildinfo
 *.log

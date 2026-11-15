@@ -53,13 +53,29 @@ export function StudioScreen({
         <p className="muted">Добавьте голос, чтобы собрать модель и озвучку.</p>
       ) : null}
       {error ? <div className="banner error">{error}</div> : null}
-      <div className="row">
-        <Button onClick={() => onNavigate("dataset")}>Начать с датасета</Button>
-        <Button variant="secondary" onClick={() => onNavigate("models")}>
+      <div className="row" style={{ position: "relative", zIndex: 1 }}>
+        <Button
+          data-testid="cta-start-dataset"
+          aria-label="Начать с датасета"
+          onClick={() => onNavigate("dataset")}
+        >
+          Начать с датасета
+        </Button>
+        <Button
+          variant="secondary"
+          data-testid="cta-import-model"
+          onClick={() => onNavigate("models")}
+        >
           Импортировать модель
         </Button>
         {!empty ? (
-          <Button variant="secondary" onClick={() => onNavigate(models.some((m) => m.status === "ready") ? "text" : "segmentation")}>
+          <Button
+            variant="secondary"
+            data-testid="cta-continue"
+            onClick={() =>
+              onNavigate(models.some((m) => m.status === "ready") ? "text" : "segmentation")
+            }
+          >
             Продолжить путь
           </Button>
         ) : null}

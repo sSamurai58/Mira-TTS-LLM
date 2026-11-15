@@ -20,9 +20,9 @@
 - Дата: 2026-11-15
 - Статус: принято
 - Контекст: Desktop нужен локальный контракт для датасета, jobs, модели, TTS/LLM и внешнего API; ML-стек удобен в Python.
-- Решение: Один процесс `services/studio-api` (FastAPI), данные в `~/.mira`, контракт в `docs/CONTRACT.md`. ML-воркеры v1 — stub с теми же статусами/ошибками.
+- Решение: Один процесс `services/studio-api` (FastAPI), данные в `~/.mira`, контракт в `docs/CONTRACT.md`. Segment/train v1 — stub; TTS render — interim `edge-tts` (+ffmpeg), не клон датасета.
 - Альтернативы: Встроить всё в Electron main; отдельный Rust-core; облачный backend.
-- Последствия: Фронтенд ходит только в `/v1`; реальные TTS/LLM подменяют воркеры без смены имён полей.
+- Последствия: Фронтенд ходит только в `/v1`; voice-clone ML worker подменяет stub без смены имён полей.
 
 ## ADR-4: Desktop UI — Electron + React (Vite)
 - Дата: 2026-11-15
@@ -39,3 +39,11 @@
 - Решение: Workflow `.github/workflows/ci.yml` на PR и push в main: studio-api smoke + desktop typecheck/build + artifact renderer.
 - Альтернативы: Только локальные скрипты; облачный деплой SaaS.
 - Последствия: Красный CI блокирует уверенность в merge; production по-прежнему через явный tag после тестировщика.
+
+## ADR-6: Автообновление desktop через GitHub Releases
+- Дата: 2026-11-15
+- Статус: принято
+- Контекст: Нужны проверка релиза, фоновое скачивание и перезапуск без ручной переустановки.
+- Решение: `electron-updater` + publish `electron-builder` на GitHub Releases по тегам `mira-v*`; UI — UpdateBanner + кнопка на Подключении.
+- Альтернативы: Только ручная скачка; собственный update-server; тихий install без подтверждения.
+- Последствия: Production-теги обязаны публиковать артефакты updater (`latest*.yml`); в dev-режиме проверка сообщает, что нужен packaged build.
