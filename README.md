@@ -2,7 +2,12 @@
 
 **Mira** — студия TTS + LLM: свой голос, автонарезка, обучение модели, текст, озвучка и подключение к другим проектам.
 
-Текущий выпуск: **Mira v1 — Studio Path**. Решение и требования — в [`docs/PRD.md`](docs/PRD.md).
+Текущий выпуск: **Mira v1 — Studio Path** (desktop).
+
+- Требования: [`docs/PRD.md`](docs/PRD.md)
+- Дизайн: [`docs/DESIGN.md`](docs/DESIGN.md)
+- Контракт API: [`docs/CONTRACT.md`](docs/CONTRACT.md)
+- Локальный сервис: [`services/studio-api`](services/studio-api)
 
 ## Команда продукта
 

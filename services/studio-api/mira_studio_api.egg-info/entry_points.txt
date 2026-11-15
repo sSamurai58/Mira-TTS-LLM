@@ -1,0 +1,2 @@
+[console_scripts]
+mira-studio-api = mira_api.main:run
