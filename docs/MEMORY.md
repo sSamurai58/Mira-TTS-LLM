@@ -2,13 +2,12 @@
 
 ## Текущий статус
 
-2026-11-15 (Europe/Moscow): принято заключение специалиста предмета по речи/датасету (`docs/DOMAIN.md`). Пороги вшиты в контракт и API. Следующая роль — фронтенд desktop.
+2026-11-15 (Europe/Moscow): собран desktop UI (`apps/desktop`) по DESIGN + CONTRACT. Сдача: `docs/FRONTEND.md`. Следующие роли: DevOps / тестировщик.
 
 ## Решения
 
-- Mira v1 Studio Path, desktop, FastAPI studio-core.
-- Обучение только после accepted сегментов (≥3 и ≥15 с) и `voiceRightsConfirmed`.
-- Модель ≠ биометрия; UI говорит «в стиле вашего датасета».
+- Mira v1 Studio Path, desktop Electron+React, FastAPI studio-core.
+- Domain-пороги датасета и `voiceRightsConfirmed`.
 
 ## Баги
 
@@ -16,5 +15,4 @@
 
 ## Изменения
 
-- 2026-11-15: PRD, DESIGN, CONTRACT, studio-api.
-- 2026-11-15: DOMAIN + валидации порогов в API.
+- 2026-11-15: PRD → DESIGN → CONTRACT → DOMAIN → desktop UI.
