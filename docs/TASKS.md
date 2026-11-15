@@ -2,11 +2,11 @@
 
 ## Всего
 
-6
+7
 
 ## Готово
 
-6
+7
 
 ## В работе
 
@@ -14,21 +14,16 @@
 
 ## Задачи
 
-### Подключить product-team skills
-- [x] Vendor пакета
+### product-team skills
+- [x]
 
-### Решение продакта Mira v1
-- [x] Studio Path + desktop
+### Продакт / дизайн / бэкенд / domain / frontend
+- [x] Studio Path до desktop UI
 
-### Дизайн экранов пути v1
-- [x] Спецификация 7 экранов
+### DevOps
+- [x] CI GitHub Actions
+- [x] `docs/DEVOPS.md`, обновлён RELEASE
+- [x] ADR-5
 
-### Контракт бэкенда v1
-- [x] CONTRACT + studio-api
-
-### Специалист предмета
-- [x] DOMAIN + пороги в API
-
-### Фронтенд desktop
-- [x] `apps/desktop` Electron+React, 7 экранов
-- [x] ADR-4
+### Тестировщик
+- [ ] Полный проход, секьюрити, релиз-чеклист

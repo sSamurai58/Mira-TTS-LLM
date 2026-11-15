@@ -21,11 +21,22 @@
 | Бинарники | `~/.mira/samples|models|renders|packages` |
 | Внешний доступ | Bearer token (sha256 в БД) |
 
+## Окружения
+
+| Имя | Как открыть | Кто выкладывает |
+|---|---|---|
+| local | API `:8741` + `npm run desktop` | разработчик |
+| staging | CI artifact `mira-desktop-renderer` + API с отдельным `MIRA_DATA_DIR` | владелец репо |
+| production | tagged desktop + local API | человек после тестировщика |
+
+Подробности: [`docs/DEVOPS.md`](DEVOPS.md).
+
 ## Структура папок
 
 ```text
-docs/                     продуктовые документы + CONTRACT + DOMAIN
+docs/                     продуктовые документы + CONTRACT + DOMAIN + DEVOPS
 services/studio-api/      локальный API studio-core
 apps/desktop/             Electron/React UI
+.github/workflows/ci.yml  CI
 .cursor/skills/           роли команды
 ```

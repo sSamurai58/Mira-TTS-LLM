@@ -14,8 +14,16 @@ MIRA_DATA_DIR=~/.mira MIRA_PORT=8741 mira-studio-api
 
 Данные по умолчанию в `~/.mira/` (`mira.db`, `samples/`, `models/`, `renders/`, `packages/`).
 
+## Smoke
+
+```bash
+pip install -e .
+python scripts/smoke_path.py
+```
+
 ## Заметки v1
 
 - Нарезка, обучение, TTS и LLM — рабочие заглушки с полным контрактом состояний/ошибок.
 - Реальные модели речи и LLM подключаются тем же API без смены имён полей.
 - Внешний TTS: `POST /v1/external/tts` + `Authorization: Bearer <token>` после `start` и `rotateToken`.
+- CI: `.github/workflows/ci.yml` — см. `docs/DEVOPS.md`.

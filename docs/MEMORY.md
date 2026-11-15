@@ -2,12 +2,12 @@
 
 ## Текущий статус
 
-2026-11-15 (Europe/Moscow): собран desktop UI (`apps/desktop`) по DESIGN + CONTRACT. Сдача: `docs/FRONTEND.md`. Следующие роли: DevOps / тестировщик.
+2026-11-15 (Europe/Moscow): сдан DevOps; CI на ветке devops зелёный (2/2). Следующая роль — тестировщик.
 
 ## Решения
 
-- Mira v1 Studio Path, desktop Electron+React, FastAPI studio-core.
-- Domain-пороги датасета и `voiceRightsConfirmed`.
+- Mira v1: desktop Electron + studio-api; CI на Actions (ADR-5).
+- Production только после тестировщика и tag.
 
 ## Баги
 
@@ -15,4 +15,4 @@
 
 ## Изменения
 
-- 2026-11-15: PRD → DESIGN → CONTRACT → DOMAIN → desktop UI.
+- 2026-11-15: путь продукта до UI; затем CI/DEVOPS.
