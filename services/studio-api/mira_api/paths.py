@@ -14,3 +14,20 @@ def data_root() -> Path:
 
 def db_path() -> Path:
     return data_root() / "mira.db"
+
+
+def to_public_path(path: str | Path) -> str:
+    """Return path relative to data root when possible (no absolute leak)."""
+    root = data_root().resolve()
+    p = Path(path).resolve()
+    try:
+        return str(p.relative_to(root))
+    except ValueError:
+        return p.name
+
+
+def resolve_data_path(stored: str) -> Path:
+    p = Path(stored)
+    if p.is_absolute():
+        return p
+    return data_root() / p

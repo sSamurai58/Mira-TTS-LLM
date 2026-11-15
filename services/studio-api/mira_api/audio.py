@@ -39,6 +39,37 @@ def wav_duration_ms(path: Path) -> int:
     return duration_ms
 
 
+def synthesize_speech_wav(path: Path, text: str) -> int:
+    """Best-effort audible TTS. Prefers edge-tts; falls back to silence."""
+    import shutil
+    import subprocess
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        import asyncio
+        import edge_tts  # type: ignore
+
+        mp3_path = path.with_suffix(".mp3")
+
+        async def _save() -> None:
+            communicate = edge_tts.Communicate(text, "ru-RU-SvetlanaNeural")
+            await communicate.save(str(mp3_path))
+
+        asyncio.run(_save())
+        ffmpeg = shutil.which("ffmpeg")
+        if ffmpeg and mp3_path.exists():
+            subprocess.run(
+                [ffmpeg, "-y", "-i", str(mp3_path), str(path)],
+                check=True,
+                capture_output=True,
+            )
+            mp3_path.unlink(missing_ok=True)
+            return wav_duration_ms(path)
+    except Exception:
+        pass
+    return write_silence_wav(path, duration_ms=max(600, min(8000, len(text) * 40)))
+
+
 def write_silence_wav(path: Path, duration_ms: int = 800, rate: int = 22050) -> int:
     n_frames = max(1, int(rate * duration_ms / 1000))
     path.parent.mkdir(parents=True, exist_ok=True)

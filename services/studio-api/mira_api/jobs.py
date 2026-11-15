@@ -4,8 +4,8 @@ import threading
 import time
 from pathlib import Path
 
-from mira_api.audio import stub_segments, write_silence_wav
-from mira_api.paths import data_root
+from mira_api.audio import stub_segments, synthesize_speech_wav
+from mira_api.paths import data_root, to_public_path
 from mira_api.store import NOW, STORE, new_id
 
 
@@ -105,7 +105,7 @@ def run_training(job_id: str, model_id: str) -> None:
         with STORE.connect() as conn:
             conn.execute(
                 "UPDATE models SET status='ready', progress_pct=100, error_code=NULL, package_path=?, updated_at=? WHERE id=?",
-                (str(model_dir), NOW(), model_id),
+                (to_public_path(model_dir), NOW(), model_id),
             )
             _set_job(conn, job_id, "succeeded", 100)
     except Exception:
@@ -161,10 +161,10 @@ def run_tts(job_id: str, model_id: str, script_id: str) -> None:
                 return
             render_id = new_id("rnd")
             path = data_root() / "renders" / f"{render_id}.wav"
-            duration = write_silence_wav(path, duration_ms=max(600, min(8000, len(body) * 40)))
+            duration = synthesize_speech_wav(path, body)
             conn.execute(
                 "INSERT INTO renders(id, model_id, script_text_id, path, duration_ms, created_at) VALUES (?,?,?,?,?,?)",
-                (render_id, model_id, script_id, str(path), duration, NOW()),
+                (render_id, model_id, script_id, to_public_path(path), duration, NOW()),
             )
             conn.execute(
                 "UPDATE jobs SET target_id=?, status='succeeded', progress_pct=100, updated_at=? WHERE id=?",

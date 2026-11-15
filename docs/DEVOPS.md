@@ -7,7 +7,7 @@
   - production — установленный desktop (AppImage/dmg/nsis) + studio-api; выкладка только tag mira-v*
 Пайплайн:
   - pull_request / push main — studio-api smoke + desktop typecheck/build — GitHub Checks
-  - push tag mira-v* — Release workflow: CI gate + electron-builder publish на GitHub Releases (Linux AppImage)
+  - push tag mira-v* — Release workflow: CI gate + electron-builder publish (Linux AppImage; macOS dmg/zip; Windows nsis; mac/win soft-fail без подписи)
 Сборка (команды):
   - API: cd services/studio-api && pip install -e . && python scripts/smoke_path.py
   - Desktop UI: cd apps/desktop && npm ci && npm run typecheck && npm run build
@@ -39,13 +39,15 @@
 Миграции:
   - schema on start; удаление mira.db необратимо
 Поверхности:
-  - desktop; автообновление в v1 для Linux AppImage publish; mac/win targets в builder, publish runners — следующий шаг при необходимости
+  - desktop; автообновление: Linux AppImage + mac/win publish jobs в release.yml
 Как проверить:
   1. npm ci && npm run typecheck && npm run build в apps/desktop
   2. npm run pack — локальный dir; в packaged проверить updater:check
-  3. Tag mira-v* на CI — появился Release с latest-linux.yml + AppImage
+  3. Tag mira-v* на CI — Release с latest-linux.yml + AppImage (и mac/win артефакты при успешных runners)
 Риски платформы:
-  - mac/win publish не в каждом tag (только linux runner в release.yml v1)
+  - mac/win publish без code signing могут падать (continue-on-error)
   - Dev-режим (vite) не качает обновления — только установленная сборка
   - Откат не трогает ~/.mira
+  - npm audit high в electron-builder/tar (dev tooling); prod deps чисты
 ```
+

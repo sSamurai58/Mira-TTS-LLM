@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field
 from mira_api import audio
 from mira_api.errors import error_response, raise_error
 from mira_api import jobs as joblib
-from mira_api.paths import data_root
+from mira_api.paths import data_root, resolve_data_path, to_public_path
 from mira_api.store import (
     NOW,
     STORE,
@@ -153,7 +153,7 @@ def _save_sample(dataset_id: str, filename: str, data: bytes, name: str | None) 
         try:
             conn.execute(
                 "INSERT INTO samples(id, dataset_id, name, path, duration_ms, format, sha256, created_at) VALUES (?,?,?,?,?,?,?,?)",
-                (sample_id, dataset_id, sample_name, str(path), duration, fmt, digest, ts),
+                (sample_id, dataset_id, sample_name, to_public_path(path), duration, fmt, digest, ts),
             )
             conn.execute(
                 "UPDATE datasets SET updated_at=? WHERE id=?",
@@ -348,7 +348,7 @@ def export_model(model_id: str):
             raise_error("ModelNotFound", "modelId", 404)
         if row["status"] != "ready":
             raise_error("ModelNotReady", "modelId", 409)
-        model_dir = Path(row["package_path"] or (data_root() / "models" / model_id))
+        model_dir = resolve_data_path(row["package_path"] or f"models/{model_id}")
         weights = model_dir / "weights.bin"
         if not weights.exists():
             weights.parent.mkdir(parents=True, exist_ok=True)
@@ -390,7 +390,7 @@ async def import_model(
     with STORE.connect() as conn:
         conn.execute(
             "INSERT INTO models(id, name, status, dataset_id, source, package_path, progress_pct, error_code, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)",
-            (model_id, name, "ready", None, "imported", str(model_dir), 100, None, ts, ts),
+            (model_id, name, "ready", None, "imported", to_public_path(model_dir), 100, None, ts, ts),
         )
         row = conn.execute("SELECT * FROM models WHERE id=?", (model_id,)).fetchone()
         return row_to_model(row)
@@ -512,7 +512,7 @@ def get_render_audio(render_id: str):
         row = conn.execute("SELECT * FROM renders WHERE id=?", (render_id,)).fetchone()
         if not row:
             raise_error("ModelNotFound", "modelId", 404)
-        path = Path(row["path"])
+        path = resolve_data_path(row["path"])
         if not path.exists():
             raise_error("TtsFailed", "job")
         return FileResponse(path, media_type="audio/wav", filename=f"{render_id}.wav")
@@ -622,7 +622,7 @@ def external_tts(
             "SELECT * FROM renders WHERE id=?",
             (job_row["target_id"],),
         ).fetchone()
-        path = Path(render["path"])
+        path = resolve_data_path(render["path"])
         return Response(content=path.read_bytes(), media_type="audio/wav")
 
 

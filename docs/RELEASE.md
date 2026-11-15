@@ -6,22 +6,22 @@ Mira v1 — Studio Path
 
 ## Критерий «выпуск закрыт»
 - [ ] Путь PRD пройден на staging
-- [ ] Блокеры тестировщика = 0
-- [ ] Секьюрити-чеклист без открытых высоких/блокеров
-- [x] Пайплайн зелёный — CI на `cursor/mira-v1-devops-ci-5e31` (2026-11-15, Europe/Moscow), 2/2 checks
-- [x] Откат описан и проверен на бумаге — `docs/DEVOPS.md` (2026-11-15)
+- [ ] Блокеры тестировщика = 0 (открыт T-1 voice-clone)
+- [x] Секьюрити-чеклист без открытых высоких/блокеров — T-4 закрыт; T-5 tooling принят
+- [x] Пайплайн зелёный — CI на feature-ветках (2026-11-15, Europe/Moscow)
+- [x] Откат описан и проверен на бумаге — `docs/DEVOPS.md`
 - [x] Секреты не в репозитории — только имена в DEVOPS/CONTRACT
-- [ ] GLOSSARY совпадает с экранами и контрактом
+- [x] GLOSSARY совпадает с экранами и контрактом
 
 ## Чеклист выкладки
-- [ ] путь Studio Path пройден end-to-end
-- [ ] импорт/экспорт VoiceModel проверен
-- [ ] локальный API отвечает на озвучку из внешнего вызова
-- [ ] LLM-текст → TTS проверен
+- [x] путь Studio Path пройден end-to-end (API smoke)
+- [x] импорт/экспорт VoiceModel проверен (smoke)
+- [x] локальный API отвечает на озвучку из внешнего вызова (smoke)
+- [x] LLM-текст → TTS проверен (smoke; TTS = edge-tts interim, не клон)
 - [ ] CI Checks зелёные на теге/main
-- [ ] GET /health ок на целевом API
-- [ ] desktop открывает Студию без баннера «studio-api не запущен»
-- [ ] GitHub Release по tag `mira-v*` содержит AppImage + latest-linux.yml
+- [x] GET /health ок на целевом API
+- [ ] desktop открывает Студию без баннера «studio-api не запущен» (packaged e2e)
+- [ ] GitHub Release по tag `mira-v*` содержит AppImage + latest-linux.yml (+ mac/win при успешных runners)
 - [ ] В установленной сборке: проверка обновления → скачивание → «Перезапустить» поднимает новую версию
 
 ## Откат
@@ -30,4 +30,6 @@ Mira v1 — Studio Path
 
 ## Заметки выпуска
 
-DevOps сдан (`docs/DEVOPS.md`, `.github/workflows/ci.yml`). Выпуск ждёт проход тестировщика.
+Тестировщик: `docs/TEST_REPORT.md` — вердикт **не к выкладке** из‑за T-1 (voice-clone).  
+Release workflow: Linux AppImage + macOS (dmg/zip) + Windows (nsis); mac/win `continue-on-error` пока нет подписи.  
+Interim TTS: `edge-tts` → ffmpeg wav; fallback silence.

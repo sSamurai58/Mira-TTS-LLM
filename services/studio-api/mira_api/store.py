@@ -9,7 +9,7 @@ import uuid
 from contextlib import contextmanager
 from typing import Any, Iterator
 
-from mira_api.paths import db_path
+from mira_api.paths import db_path, to_public_path
 
 
 def _now() -> str:
@@ -167,7 +167,7 @@ def row_to_sample(row: sqlite3.Row) -> dict[str, Any]:
         "id": row["id"],
         "datasetId": row["dataset_id"],
         "name": row["name"],
-        "path": row["path"],
+        "path": to_public_path(row["path"]),
         "durationMs": row["duration_ms"],
         "format": row["format"],
         "createdAt": row["created_at"],
@@ -195,7 +195,7 @@ def row_to_model(row: sqlite3.Row) -> dict[str, Any]:
         "status": row["status"],
         "datasetId": row["dataset_id"],
         "source": row["source"],
-        "packagePath": row["package_path"],
+        "packagePath": to_public_path(row["package_path"]) if row["package_path"] else None,
         "progressPct": row["progress_pct"],
         "errorCode": row["error_code"],
         "createdAt": row["created_at"],
@@ -221,7 +221,7 @@ def row_to_render(row: sqlite3.Row) -> dict[str, Any]:
         "id": row["id"],
         "modelId": row["model_id"],
         "scriptTextId": row["script_text_id"],
-        "path": row["path"],
+        "path": to_public_path(row["path"]),
         "durationMs": row["duration_ms"],
         "createdAt": row["created_at"],
     }
