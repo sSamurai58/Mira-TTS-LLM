@@ -23,7 +23,7 @@ Actions: [Release #1](https://github.com/sSamurai58/Mira-TTS-LLM/actions/runs/43
 - [ ] CI Checks зелёные на теге/main
 - [x] GET /health ок на целевом API
 - [ ] desktop открывает Студию без баннера «studio-api не запущен» (packaged e2e)
-- [ ] GitHub Release по tag `mira-v*` содержит AppImage + latest-linux.yml (+ mac/win при успешных runners)
+- [x] GitHub Release `v0.1.0`: AppImage, mac arm64 dmg/zip, Windows Setup, latest-*.yml
 - [ ] В установленной сборке: проверка обновления → скачивание → «Перезапустить» поднимает новую версию
 
 ## Откат
