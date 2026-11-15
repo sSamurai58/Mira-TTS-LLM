@@ -7,6 +7,12 @@ from pathlib import Path
 
 
 SUPPORTED = {"wav", "flac"}
+ALLOWED_RATES = {16000, 22050, 24000, 44100, 48000}
+SAMPLE_MIN_MS = 500
+SAMPLE_MAX_MS = 300_000
+SEGMENT_MIN_MS = 50
+TRAIN_MIN_ACCEPTED = 3
+TRAIN_MIN_ACCEPTED_MS = 15_000
 
 
 def sniff_format(filename: str, data: bytes) -> str | None:
@@ -18,11 +24,19 @@ def sniff_format(filename: str, data: bytes) -> str | None:
     return None
 
 
-def wav_duration_ms(path: Path) -> int:
+def inspect_wav(path: Path) -> tuple[int, int, int]:
+    """Return (duration_ms, sample_rate, channels)."""
     with wave.open(str(path), "rb") as wf:
         frames = wf.getnframes()
         rate = wf.getframerate() or 1
-        return int(frames / rate * 1000)
+        channels = wf.getnchannels()
+        duration_ms = int(frames / rate * 1000)
+        return duration_ms, rate, channels
+
+
+def wav_duration_ms(path: Path) -> int:
+    duration_ms, _, _ = inspect_wav(path)
+    return duration_ms
 
 
 def write_silence_wav(path: Path, duration_ms: int = 800, rate: int = 22050) -> int:

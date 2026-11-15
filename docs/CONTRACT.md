@@ -38,16 +38,16 @@ Auth внешнего проекта (экран Подключение): заг
   - createDataset — desktop — { name } — Dataset — создан датасет; повтор того же name в течение 2с возвращает тот же id (Idempotency-Key или dedupe)
   - getDataset — desktop — { id } — Dataset — чтение
   - listSamples — desktop — { datasetId } — { items: VoiceSample[] } — семплы датасета
-  - importSample — desktop — multipart file + datasetId + name? — VoiceSample — файл скопирован, семпл в списке
-  - createSampleFromRecording — desktop — multipart file (wav) + datasetId + name? — VoiceSample — запись с микрофона сохранена как семпл (клиент шлёт готовый blob)
+  - importSample — desktop — multipart file + datasetId + name? — VoiceSample — wav/flac; длительность 500–300000 ms; каналы 1–2; иначе SampleFormatUnsupported / SampleDurationInvalid / SampleChannelsUnsupported
+  - createSampleFromRecording — desktop — multipart file (wav) + datasetId + name? — VoiceSample — те же пределы, что importSample
   - startSegmentation — desktop — { datasetId, sampleId? } — RenderJob — job kind=segment queued/running; после успеха Segments для семпла(ов) pending
   - listSegments — desktop — { sampleId } — { items: Segment[] }
-  - updateSegment — desktop — { id, startMs?, endMs?, label?, status? } — Segment — границы/статус обновлены; startMs < endMs
-  - startTraining — desktop — { datasetId, name } — { model: VoiceModel, job: RenderJob } — модель status=training; нужны ≥1 VoiceSample и ≥1 accepted Segment (если сегментов ещё нет — ошибка NoAcceptedSegments)
+  - updateSegment — desktop — { id, startMs?, endMs?, label?, status? } — Segment — границы/статус; startMs < endMs; длительность сегмента ≥ 50 ms; иначе SegmentTooShort / SegmentInvalidRange
+  - startTraining — desktop — { datasetId, name, voiceRightsConfirmed: true } — { model: VoiceModel, job: RenderJob } — модель status=training; нужны ≥1 VoiceSample, ≥3 accepted Segment и сумма duration accepted ≥ 15000 ms; иначе NoAcceptedSegments / DatasetTooSmallForTraining; без voiceRightsConfirmed — VoiceRightsNotConfirmed
   - listModels — desktop — {} — { items: VoiceModel[] }
   - getModel — desktop — { id } — VoiceModel
   - exportModel — desktop — { id } — file ModelPackage — пакет с тем же name
-  - importModel — desktop — multipart file — VoiceModel — status=ready, source=imported; name из manifest
+  - importModel — desktop — multipart file + voiceRightsConfirmed=true — VoiceModel — status=ready, source=imported; name из manifest; без флага — VoiceRightsNotConfirmed
   - deleteModel — desktop — { id } — { ok: true } — модель и веса удалены
   - getScriptText — desktop — {} — ScriptText — активный текст
   - saveScriptText — desktop — { body } — ScriptText — source=manual; пустой body допускается как черновик
@@ -104,11 +104,17 @@ HTTP-карта (реализация):
 Ошибки:
   - SampleImportFailed — 422 — file — «Не удалось импортировать файл. Выберите WAV или FLAC и повторите.»
   - SampleFormatUnsupported — 422 — file — формат не wav/flac
+  - SampleDurationInvalid — 422 — file — «Длительность семпла должна быть от 0,5 с до 5 мин.»
+  - SampleChannelsUnsupported — 422 — file — «Поддерживаются только mono или stereo (≤2 канала).»
+  - SampleRateUnsupported — 422 — file — «Частота дискретизации не поддерживается.»
   - DatasetNotFound — 404 — datasetId — датасет не найден
   - SampleNotFound — 404 — sampleId — семпл не найден
   - SegmentationFailed — 422 — job — «Нарезка не завершилась. Проверьте семпл и запустите снова.»
   - SegmentInvalidRange — 422 — startMs|endMs — startMs < endMs и в пределах длительности семпла
+  - SegmentTooShort — 422 — endMs — «Сегмент короче 50 мс. Увеличьте длительность.»
   - NoAcceptedSegments — 422 — datasetId — нет принятых сегментов для обучения
+  - DatasetTooSmallForTraining — 422 — datasetId — «Для обучения нужно ≥3 принятых сегмента и ≥15 с суммарно.»
+  - VoiceRightsNotConfirmed — 422 — voiceRightsConfirmed — «Подтвердите право использовать этот голос.»
   - TrainingFailed — 422 — job — «Обучение не завершилось. Откройте лог и запустите снова.»
   - ModelNotFound — 404 — modelId — модель не найдена
   - ModelNotReady — 409 — modelId — модель ещё не status=ready
@@ -120,6 +126,15 @@ HTTP-карта (реализация):
   - PortInUse — 409 — port — «Порт занят. Выберите другой порт и запустите снова.»
   - JobConflict — 409 — kind — уже есть running job этого kind
 ```
+
+## Предметные пределы (domain)
+
+См. [`docs/DOMAIN.md`](DOMAIN.md). Кратко:
+
+- VoiceSample durationMs ∈ [500, 300000]
+- wav sampleRate ∈ {16000, 22050, 24000, 44100, 48000}; channels ≤ 2
+- Segment duration ≥ 50 ms
+- Train: accepted count ≥ 3 и sum(endMs−startMs) ≥ 15000; `voiceRightsConfirmed=true`
 
 Тело ошибки:
 
@@ -175,8 +190,8 @@ HTTP-карта (реализация):
   1. POST /v1/datasets {"name":"demo"} → 200 id
   2. POST /v1/datasets/{id}/samples/import (wav) → sample в GET .../samples
   3. POST /v1/datasets/{id}/segmentation → job; poll GET /v1/jobs/{id} до succeeded; GET /v1/samples/{sid}/segments длина > 0
-  4. PATCH сегмент status=accepted; POST /v1/models/train {"datasetId","name":"voice1"} → model training→ready
-  5. GET /v1/models/{id}/export → файл; POST /v1/models/import тем файлом → name сохраняется
+  4. PATCH ≥3 сегмента status=accepted (сумма ≥15 с); POST /v1/models/train {"datasetId","name":"voice1","voiceRightsConfirmed":true} → ready
+  5. GET export; POST import с voiceRightsConfirmed=true → name сохраняется; без флага → VoiceRightsNotConfirmed
   6. PUT /v1/script {"body":"Привет"} ; POST /v1/tts {"modelId"} → render; GET audio 200 audio/wav
   7. PATCH /v1/api-settings {"rotateToken":true}; POST /v1/api-settings/start; POST /v1/external/tts без token → ApiAuthFailed 401; с Bearer и text → audio/wav
 ```

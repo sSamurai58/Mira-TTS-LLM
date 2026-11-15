@@ -7,7 +7,7 @@ import zipfile
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, File, Header, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, Field
@@ -64,6 +64,7 @@ class SegmentationBody(BaseModel):
 class TrainBody(BaseModel):
     datasetId: str
     name: str = Field(min_length=1)
+    voiceRightsConfirmed: bool = False
 
 
 class SegmentPatch(BaseModel):
@@ -131,13 +132,22 @@ def _save_sample(dataset_id: str, filename: str, data: bytes, name: str | None) 
         if fmt == "wav":
             path.write_bytes(data)
             try:
-                duration = audio.wav_duration_ms(path)
+                duration, rate, channels = audio.inspect_wav(path)
             except Exception:
                 raise_error("SampleImportFailed", "file")
+            if channels < 1 or channels > 2:
+                path.unlink(missing_ok=True)
+                raise_error("SampleChannelsUnsupported", "file")
+            if rate not in audio.ALLOWED_RATES:
+                path.unlink(missing_ok=True)
+                raise_error("SampleRateUnsupported", "file")
         else:
             # Store original flac bytes; duration stub until decoder lands.
             path.write_bytes(data)
             duration = max(1000, len(data) // 32)
+        if duration < audio.SAMPLE_MIN_MS or duration > audio.SAMPLE_MAX_MS:
+            path.unlink(missing_ok=True)
+            raise_error("SampleDurationInvalid", "file")
         sample_name = name or Path(filename).stem or sample_id
         ts = NOW()
         try:
@@ -271,6 +281,8 @@ def update_segment(segment_id: str, body: SegmentPatch) -> dict[str, Any]:
         end = body.endMs if body.endMs is not None else row["end_ms"]
         if start >= end or start < 0 or end > sample["duration_ms"]:
             raise_error("SegmentInvalidRange", "startMs")
+        if (end - start) < audio.SEGMENT_MIN_MS:
+            raise_error("SegmentTooShort", "endMs")
         status = body.status if body.status is not None else row["status"]
         if status not in ("accepted", "rejected", "pending"):
             raise_error("SegmentInvalidRange", "status")
@@ -285,16 +297,21 @@ def update_segment(segment_id: str, body: SegmentPatch) -> dict[str, Any]:
 
 @app.post("/v1/models/train")
 def start_training(body: TrainBody) -> dict[str, Any]:
+    if not body.voiceRightsConfirmed:
+        raise_error("VoiceRightsNotConfirmed", "voiceRightsConfirmed")
     if joblib.has_running("train"):
         raise_error("JobConflict", "kind", 409)
     with STORE.connect() as conn:
         _require_dataset(conn, body.datasetId)
-        accepted = conn.execute(
-            "SELECT COUNT(*) AS c FROM segments WHERE dataset_id=? AND status='accepted'",
+        accepted_rows = conn.execute(
+            "SELECT start_ms, end_ms FROM segments WHERE dataset_id=? AND status='accepted'",
             (body.datasetId,),
-        ).fetchone()
-        if int(accepted["c"]) < 1:
+        ).fetchall()
+        if len(accepted_rows) < 1:
             raise_error("NoAcceptedSegments", "datasetId")
+        total_ms = sum(int(r["end_ms"]) - int(r["start_ms"]) for r in accepted_rows)
+        if len(accepted_rows) < audio.TRAIN_MIN_ACCEPTED or total_ms < audio.TRAIN_MIN_ACCEPTED_MS:
+            raise_error("DatasetTooSmallForTraining", "datasetId")
         model_id = new_id("mdl")
         ts = NOW()
         conn.execute(
@@ -351,7 +368,12 @@ def export_model(model_id: str):
 
 
 @app.post("/v1/models/import")
-async def import_model(file: UploadFile = File(...)) -> dict[str, Any]:
+async def import_model(
+    file: UploadFile = File(...),
+    voiceRightsConfirmed: bool = Form(False),
+) -> dict[str, Any]:
+    if not voiceRightsConfirmed:
+        raise_error("VoiceRightsNotConfirmed", "voiceRightsConfirmed")
     data = await file.read()
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as zf:
