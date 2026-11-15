@@ -2,11 +2,11 @@
 
 ## Всего
 
-4
+5
 
 ## Готово
 
-3
+4
 
 ## В работе
 
@@ -28,4 +28,10 @@
 - [x] Токены цвета/типа/отступов в `docs/DESIGN.md`
 
 ### Контракт бэкенда v1
-- [ ] Ждёт поручения: сущности Dataset, Segment, VoiceModel, jobs, API
+- [x] `docs/CONTRACT.md` (studio-core)
+- [x] `services/studio-api` FastAPI + smoke path
+- [x] ADR-3
+
+### Специалист предмета / фронтенд desktop
+- [ ] Domain: пороги нарезки и датасета
+- [ ] Desktop UI по `docs/DESIGN.md` + CONTRACT

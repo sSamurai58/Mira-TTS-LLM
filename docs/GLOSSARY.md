@@ -24,9 +24,21 @@
 
 ## Ошибки
 - SampleImportFailed — не удалось импортировать аудио
+- SampleFormatUnsupported — формат не wav/flac
+- DatasetNotFound — датасет не найден
+- SampleNotFound — семпл не найден
 - SegmentationFailed — автонарезка не завершилась
+- SegmentInvalidRange — неверные границы сегмента
+- NoAcceptedSegments — нет принятых сегментов для обучения
 - TrainingFailed — обучение модели упало
+- ModelNotFound — модель не найдена
+- ModelNotReady — модель ещё не готова
 - ModelImportFailed — пакет модели не открылся
+- ScriptTextEmpty — нет текста для TTS
 - TtsFailed — озвучка не собралась
 - LlmFailed — LLM не вернул текст
 - ApiAuthFailed — внешний вызов без доступа к локальному API
+- PortInUse — порт занят
+- JobConflict — уже выполняется задача этого типа
+
+Полный контракт: [`docs/CONTRACT.md`](CONTRACT.md).
