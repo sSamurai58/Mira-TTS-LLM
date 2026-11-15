@@ -6,7 +6,7 @@
 
 ## Готово
 
-5
+6
 
 ## В работе
 
@@ -15,21 +15,20 @@
 ## Задачи
 
 ### Подключить product-team skills
-- [x] Vendor пакета в `.cursor/skills/product-team/`
+- [x] Vendor пакета
 
 ### Решение продакта Mira v1
-- [x] Studio Path + desktop (ADR-2)
+- [x] Studio Path + desktop
 
 ### Дизайн экранов пути v1
 - [x] Спецификация 7 экранов
 
 ### Контракт бэкенда v1
-- [x] CONTRACT + studio-api (ADR-3)
+- [x] CONTRACT + studio-api
 
-### Специалист предмета (речь/датасет)
-- [x] `docs/DOMAIN.md`
-- [x] Пороги в CONTRACT и studio-api
-- [x] Чекбокс прав на голос + тексты DESIGN
+### Специалист предмета
+- [x] DOMAIN + пороги в API
 
 ### Фронтенд desktop
-- [ ] Shell + экраны по DESIGN + CONTRACT
+- [x] `apps/desktop` Electron+React, 7 экранов
+- [x] ADR-4

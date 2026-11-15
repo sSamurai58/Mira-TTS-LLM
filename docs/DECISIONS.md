@@ -23,3 +23,11 @@
 - Решение: Один процесс `services/studio-api` (FastAPI), данные в `~/.mira`, контракт в `docs/CONTRACT.md`. ML-воркеры v1 — stub с теми же статусами/ошибками.
 - Альтернативы: Встроить всё в Electron main; отдельный Rust-core; облачный backend.
 - Последствия: Фронтенд ходит только в `/v1`; реальные TTS/LLM подменяют воркеры без смены имён полей.
+
+## ADR-4: Desktop UI — Electron + React (Vite)
+- Дата: 2026-11-15
+- Статус: принято
+- Контекст: Нужна desktop-оболочка под DESIGN с шагом-навигатором и вызовами studio-api.
+- Решение: `apps/desktop` на Electron + React + Vite; renderer ходит в локальный `/v1` (proxy на studio-api).
+- Альтернативы: Tauri; чистый Qt; только браузер без окна.
+- Последствия: Запуск — API + `npm run desktop`; стек UI зафиксирован для v1.

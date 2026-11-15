@@ -8,6 +8,15 @@
 - Дизайн: [`docs/DESIGN.md`](docs/DESIGN.md)
 - Контракт API: [`docs/CONTRACT.md`](docs/CONTRACT.md)
 - Локальный сервис: [`services/studio-api`](services/studio-api)
+- Desktop UI: [`apps/desktop`](apps/desktop)
+
+```bash
+# API
+cd services/studio-api && pip install -e . && MIRA_PORT=8741 mira-studio-api
+
+# UI (другой терминал)
+cd apps/desktop && npm install && npm run desktop
+```
 
 ## Команда продукта
 

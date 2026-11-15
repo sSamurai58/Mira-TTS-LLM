@@ -10,3 +10,7 @@ venv/
 .mira/
 *.db
 .DS_Store
+node_modules/
+apps/desktop/dist/
+*.tsbuildinfo
+*.log
