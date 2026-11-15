@@ -66,7 +66,29 @@
       "category": "public.app-category.productivity"
     },
     "win": {
-      "target": ["nsis"]
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Mira",
+      "installerLanguages": ["ru_RU", "en_US"],
+      "language": "1049",
+      "artifactName": "Mira-Setup-${version}-win-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Mira-Portable-${version}-win-${arch}.${ext}"
     }
   }
 }

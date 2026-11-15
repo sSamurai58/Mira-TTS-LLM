@@ -32,4 +32,5 @@ Mira v1 — Studio Path
 
 Тестировщик: `docs/TEST_REPORT.md` — вердикт **не к выкладке** из‑за T-1 (voice-clone).  
 Release workflow: Linux AppImage + macOS (dmg/zip) + Windows (nsis); mac/win `continue-on-error` пока нет подписи.  
-Interim TTS: `edge-tts` → ffmpeg wav; fallback silence.
+Interim TTS: `edge-tts` → ffmpeg wav; fallback silence.  
+Ручной Windows installer в репо: `install/windows/` (Setup + Portable, Git LFS).

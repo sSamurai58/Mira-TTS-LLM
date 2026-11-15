@@ -1,0 +1,2 @@
+install/windows/*.exe filter=lfs diff=lfs merge=lfs -text
+install/windows/*.blockmap filter=lfs diff=lfs merge=lfs -text

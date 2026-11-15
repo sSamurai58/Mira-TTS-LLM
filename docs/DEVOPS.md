@@ -38,6 +38,11 @@
   - Баннер обновления / экран Подключение → «Проверить обновления»
 Миграции:
   - schema on start; удаление mira.db необратимо
+Windows installers (локально в репо):
+  - `install/windows/Mira-Setup-*-win-x64.exe` — NSIS установщик
+  - `install/windows/Mira-Portable-*-win-x64.exe` — портативный запуск
+  - `install/windows/INSTALL.bat` — старт Setup
+  - файлы `.exe` через Git LFS
 Поверхности:
   - desktop; автообновление: Linux AppImage + mac/win publish jobs в release.yml
 Как проверить:
