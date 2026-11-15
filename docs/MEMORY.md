@@ -2,7 +2,7 @@
 
 ## Текущий статус
 
-2026-11-15 (Europe/Moscow): запушен первый tag **`mira-v0.1.0`** → Release workflow. Windows installers в `install/windows/`. Тестировщик: вердикт **не к выкладке** для production quality (T-1 voice-clone), но первый релизный прогон запущен по запросу.
+2026-11-15 (Europe/Moscow): первый релиз **опубликован** — tag `mira-v0.1.0` → [Release v0.1.0](https://github.com/sSamurai58/Mira-TTS-LLM/releases/tag/v0.1.0) (AppImage + mac arm64 + Win Setup). Windows также в `install/windows/`. T-1 voice-clone ещё открыт.
 
 ## Решения
 

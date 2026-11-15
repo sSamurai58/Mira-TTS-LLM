@@ -3,7 +3,8 @@
 ## Версия / имя выпуска
 
 Mira v1 — Studio Path  
-**Первый tag:** `mira-v0.1.0` (2026-11-15, Europe/Moscow) — запущен Release workflow
+**Первый релиз:** tag `mira-v0.1.0` → GitHub Release **[v0.1.0](https://github.com/sSamurai58/Mira-TTS-LLM/releases/tag/v0.1.0)** (2026-11-15, Europe/Moscow)  
+Actions: [Release #1](https://github.com/sSamurai58/Mira-TTS-LLM/actions/runs/43705276713) — success (linux/mac/win)
 
 ## Критерий «выпуск закрыт»
 - [ ] Путь PRD пройден на staging
@@ -34,4 +35,5 @@ Mira v1 — Studio Path
 Тестировщик: `docs/TEST_REPORT.md` — вердикт **не к выкладке** из‑за T-1 (voice-clone).  
 Release workflow: Linux AppImage + macOS (dmg/zip) + Windows (nsis); mac/win `continue-on-error` пока нет подписи.  
 Interim TTS: `edge-tts` → ffmpeg wav; fallback silence.  
-Ручной Windows installer в репо: `install/windows/` (Setup + Portable, Git LFS).
+Ручной Windows installer в репо: `install/windows/` (Setup + Portable, Git LFS).  
+Опубликованные assets: `Mira-0.1.0.AppImage`, `Mira-0.1.0-arm64.dmg` / `.zip`, `Mira-Setup-0.1.0-win-x64.exe`, `latest-linux.yml` / `latest-mac.yml` / `latest.yml`.
