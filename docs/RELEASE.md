@@ -2,7 +2,8 @@
 
 ## Версия / имя выпуска
 
-Mira v1 — Studio Path
+Mira v1 — Studio Path  
+**Первый tag:** `mira-v0.1.0` (2026-11-15, Europe/Moscow) — запущен Release workflow
 
 ## Критерий «выпуск закрыт»
 - [ ] Путь PRD пройден на staging

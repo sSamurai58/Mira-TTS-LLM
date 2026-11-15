@@ -2,7 +2,7 @@
 
 ## Текущий статус
 
-2026-11-15 (Europe/Moscow): тестировщик прошёл smoke/секьюрити; вердикт **не к выкладке** (T-1 voice-clone). Закрыты/смягчены T-3/T-4; TTS audible через edge-tts; release.yml linux+mac+win; стек на `cursor/mira-v1-auto-update-5e31` → PR в main.
+2026-11-15 (Europe/Moscow): запушен первый tag **`mira-v0.1.0`** → Release workflow. Windows installers в `install/windows/`. Тестировщик: вердикт **не к выкладке** для production quality (T-1 voice-clone), но первый релизный прогон запущен по запросу.
 
 ## Решения
 
