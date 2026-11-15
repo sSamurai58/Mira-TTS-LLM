@@ -1,0 +1,94 @@
+{
+  "name": "mira-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mira Studio Path desktop shell",
+  "author": "SamurAi",
+  "main": "electron/main.cjs",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sSamurai58/Mira-TTS-LLM.git"
+  },
+  "homepage": "https://github.com/sSamurai58/Mira-TTS-LLM",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5173",
+    "electron": "electron .",
+    "desktop": "concurrently -k \"vite\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "typecheck": "tsc -b --pretty false",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder --publish never",
+    "release": "npm run build && electron-builder --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "app.mira.studio",
+    "productName": "Mira",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "sSamurai58",
+        "repo": "Mira-TTS-LLM",
+        "releaseType": "release"
+      }
+    ],
+    "linux": {
+      "target": ["AppImage"],
+      "category": "AudioVideo"
+    },
+    "mac": {
+      "target": ["dmg", "zip"],
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Mira",
+      "installerLanguages": ["ru_RU", "en_US"],
+      "language": "1049",
+      "artifactName": "Mira-Setup-${version}-win-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Mira-Portable-${version}-win-${arch}.${ext}"
+    }
+  }
+}

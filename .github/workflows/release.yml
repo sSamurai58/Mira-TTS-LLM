@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "mira-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  ci-gate:
+    name: Pre-release CI gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - name: API smoke
+        working-directory: services/studio-api
+        run: |
+          pip install -e .
+          python scripts/smoke_path.py
+      - name: Desktop typecheck
+        working-directory: apps/desktop
+        run: |
+          npm ci
+          npm run typecheck
+
+  publish-linux:
+    name: Publish Linux AppImage
+    needs: ci-gate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - run: npm ci
+      - name: Build and publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run release -- --linux AppImage
+
+  publish-mac:
+    name: Publish macOS
+    needs: ci-gate
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: apps/desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - run: npm ci
+      - name: Build and publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run release -- --mac dmg zip
+        continue-on-error: true
+
+  publish-windows:
+    name: Publish Windows
+    needs: ci-gate
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: apps/desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - run: npm ci
+      - name: Build and publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run release -- --win nsis
+        continue-on-error: true

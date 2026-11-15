@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+.mira/
+*.db
+.DS_Store
+node_modules/
+apps/desktop/dist/
+apps/desktop/release/
+*.tsbuildinfo
+*.log
