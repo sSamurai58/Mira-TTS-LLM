@@ -1,0 +1,147 @@
+:root {
+  --canvas: #dce4ea;
+  --surface: #f4f7fa;
+  --panel: #cbd6df;
+  --ink: #15202b;
+  --mute: #5b6b7a;
+  --line: #a8b6c3;
+  --action: #0e7c86;
+  --action-hover: #0a636b;
+  --danger: #b42318;
+  --success: #217a45;
+  --focus: #0e7c86;
+  --white: #ffffff;
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+
+  --radius: 6px;
+  --sidebar-width: 220px;
+  --font-ui: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink);
+  background: var(--canvas);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+.muted {
+  color: var(--mute);
+}
+
+.title-screen {
+  margin: 0;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.title-block {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+}
+
+.meta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--mute);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-12);
+  align-items: center;
+}
+
+.banner {
+  padding: var(--space-12) var(--space-16);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.banner.error {
+  border-color: var(--danger);
+  color: var(--ink);
+}
+
+.banner.success {
+  border-color: var(--success);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition: none !important;
+  }
+}
+
+.toast {
+  position: fixed;
+  right: var(--space-24);
+  bottom: var(--space-24);
+  padding: var(--space-12) var(--space-16);
+  background: var(--ink);
+  color: var(--white);
+  border-radius: var(--radius);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 180ms ease-out, transform 180ms ease-out;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
