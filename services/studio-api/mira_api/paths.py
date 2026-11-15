@@ -19,11 +19,14 @@ def db_path() -> Path:
 def to_public_path(path: str | Path) -> str:
     """Return path relative to data root when possible (no absolute leak)."""
     root = data_root().resolve()
-    p = Path(path).resolve()
+    raw = Path(path)
+    # Relative strings are already public storage form — normalize under data root
+    # (do not resolve against process CWD).
+    p = (root / raw).resolve() if not raw.is_absolute() else raw.resolve()
     try:
         return str(p.relative_to(root))
     except ValueError:
-        return p.name
+        return raw.name
 
 
 def resolve_data_path(stored: str) -> Path:
