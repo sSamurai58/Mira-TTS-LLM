@@ -21,6 +21,8 @@ Mira v1 — Studio Path
 - [ ] CI Checks зелёные на теге/main
 - [ ] GET /health ок на целевом API
 - [ ] desktop открывает Студию без баннера «studio-api не запущен»
+- [ ] GitHub Release по tag `mira-v*` содержит AppImage + latest-linux.yml
+- [ ] В установленной сборке: проверка обновления → скачивание → «Перезапустить» поднимает новую версию
 
 ## Откат
 - процедура: checkout предыдущего git tag `mira-v1.*`; перезапуск studio-api и desktop с того тега; data dir не откатывается автоматически (см. RISKS)

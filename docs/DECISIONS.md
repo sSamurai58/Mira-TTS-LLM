@@ -39,3 +39,11 @@
 - Решение: Workflow `.github/workflows/ci.yml` на PR и push в main: studio-api smoke + desktop typecheck/build + artifact renderer.
 - Альтернативы: Только локальные скрипты; облачный деплой SaaS.
 - Последствия: Красный CI блокирует уверенность в merge; production по-прежнему через явный tag после тестировщика.
+
+## ADR-6: Автообновление desktop через GitHub Releases
+- Дата: 2026-11-15
+- Статус: принято
+- Контекст: Нужны проверка релиза, фоновое скачивание и перезапуск без ручной переустановки.
+- Решение: `electron-updater` + publish `electron-builder` на GitHub Releases по тегам `mira-v*`; UI — UpdateBanner + кнопка на Подключении.
+- Альтернативы: Только ручная скачка; собственный update-server; тихий install без подтверждения.
+- Последствия: Production-теги обязаны публиковать артефакты updater (`latest*.yml`); в dev-режиме проверка сообщает, что нужен packaged build.

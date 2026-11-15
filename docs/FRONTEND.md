@@ -18,6 +18,7 @@
 Расхождения со спецификацией:
   - Waveform на Нарезке — упрощённые блоки сегментов без playhead-scrubber (достаточно для v1 path)
   - Запись микрофона конвертируется WebM→WAV на клиенте; при экзотическом sampleRate возможен SampleRateUnsupported
+  - Автообновление UI есть; полный download/restart только в packaged Electron (не в vite-only)
 Расхождения с контрактом:
   - нет
 Как проверить:
@@ -25,6 +26,7 @@
   2. cd apps/desktop && npm install && npm run dev
   3. Открыть http://127.0.0.1:5173 — пройти нав по всем экранам
   4. Импортировать wav ≥0.5с → нарезка → принять сегменты → обучить с чекбоксом прав → текст → озвучка → API
+  5. Packaged: npm run pack → проверить «Проверить обновления» / баннер / «Перезапустить»
 ```
 
 Скриншоты: `docs/artifacts/studio_screen.webp`, `dataset_screen.webp`, `models_screen.webp`.
