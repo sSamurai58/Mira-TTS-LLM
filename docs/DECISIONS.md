@@ -31,3 +31,11 @@
 - Решение: `apps/desktop` на Electron + React + Vite; renderer ходит в локальный `/v1` (proxy на studio-api).
 - Альтернативы: Tauri; чистый Qt; только браузер без окна.
 - Последствия: Запуск — API + `npm run desktop`; стек UI зафиксирован для v1.
+
+## ADR-5: CI на GitHub Actions
+- Дата: 2026-11-15
+- Статус: принято
+- Контекст: Нет пайплайна; перед релизом нужны проверка API smoke и сборка desktop.
+- Решение: Workflow `.github/workflows/ci.yml` на PR и push в main: studio-api smoke + desktop typecheck/build + artifact renderer.
+- Альтернативы: Только локальные скрипты; облачный деплой SaaS.
+- Последствия: Красный CI блокирует уверенность в merge; production по-прежнему через явный tag после тестировщика.
